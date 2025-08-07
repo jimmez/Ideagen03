@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Start up idea generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 6vw;
+      margin: 0 0 20px;
+      color: white;
+    }
+
+    .intro {
+      color: #66ccff;
+      font-style: italic;
+      font-size: 4vw;
+      margin-bottom: 30px;
+    }
+
+    #output {
+      margin-top: 20px;
+      font-size: 6vw;
+      font-weight: bold;
+      word-wrap: break-word;
+      color: white;
+    }
+
+    #updated {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 12px;
+      color: gray;
+    }
+
+    @media (min-width: 768px) {
+      h1 {
+        font-size: 32px;
+      }
+      .intro, #output {
+        font-size: 20px;
+      }
+    }
+
+    /* Make entire screen clickable */
+    #clickArea {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    /* Optional visual indicator */
+    #clickHint {
+      font-size: 4vw;
+      color: #aaa;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="clickArea" onclick="generateIdea()"></div>
+
+  <div class="container">
+    <p id="updated">Updated: 07.08.2025, 03:20</p>
+    <p class="intro">Next time you're in a business meeting with investors and want to impress, here are some big ideas.</p>
+    <h1>Start up idea generator</h1>
+    <div id="output">Tap anywhere to begin</div>
+    <p id="clickHint">(Tap anywhere)</p>
+  </div>
+
+  <script>
+    const thingsRaw = `
+Google maps
+Dropbox 
+Google Drive
+Pokemon cards
+Netflix
+HBO Max
+Instagram
+shoes
+ear buds
+a bread
+a park
+a festival
+a big data analysis tool
+an escape room
+a history book
+a car
+a laundry service
+a boat
+a bicycle
+a hair gel
+a speedometer
+an inspirational book
+a dating app
+an mp3 player
+a drivers license
+an airline
+a YouTube channel 
+a manifest
+a drink
+a bed
+a TV-screen
+a Google search app
+a coffee cup
+a coffee shop
+a start up
+a cell phone plan
+a mobile app
+a mobile phone
+a search engine
+a bluetooth device
+a spreadsheet
+a Facebook group
+a radio station
+`;
+
+    const groupsRaw = `
+children
+statisticians
+data analysts
+ghosts
+gold fish 
+rabbits
+tulips 
+rappers
+undercover agents
+Christians
+criminals
+students
+teachers
+baristas
+psychiatrists
+foodora couriers
+supermarket cashiers
+architects
+Hindus
+asians
+immigrants
+doctors
+handymen
+politicians
+bus drivers
+cab drivers
+pilots
+`;
+
+    const things = thingsRaw.trim().split('\n');
+    const groups = groupsRaw.trim().split('\n');
+
+    function getRandomItem(list) {
+      return list[Math.floor(Math.random() * list.length)];
+    }
+
+    function generateIdea() {
+      const thing = getRandomItem(things);
+      const group = getRandomItem(groups);
+      const phrase = `It's ${thing} for ${group}`;
+      document.getElementById("output").textContent = phrase;
+      speakText(phrase);
+    }
+
+    function speakText(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+
+      // Prefer Siri or Alexa-like voice if available
+      const voices = speechSynthesis.getVoices();
+      const preferredVoice = voices.find(voice =>
+        voice.name.includes("Samantha") ||  // Siri-like on iOS
+        voice.name.includes("Alexa") ||     // Some browsers might have this
+        voice.name.includes("Google US English")
+      );
+      if (preferredVoice) {
+        utterance.voice = preferredVoice;
+      }
+
+      speechSynthesis.cancel(); // Stop previous speech
+      speechSynthesis.speak(utterance);
+    }
+
+    // Load voices early (for some browsers)
+    window.speechSynthesis.onvoiceschanged = () => {};
+  </script>
+
+</body>
+</html>
