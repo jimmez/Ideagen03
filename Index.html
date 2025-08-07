@@ -1,36 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Start up idea generator</title>
+  <meta charset="UTF-8">
+  <title>Startup Idea Generator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     html, body {
-      height: 100%;
       margin: 0;
       padding: 0;
-      background: #000;
-      color: #fff;
+      height: 100%;
+      background: black;
+      color: white;
       font-family: Arial, sans-serif;
     }
 
-    .container {
-      height: 100%;
+    #clickArea {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
       padding: 20px;
+      cursor: pointer;
     }
 
     h1 {
       font-size: 6vw;
-      margin: 0 0 20px;
-      color: white;
+      margin-bottom: 20px;
+    }
+
+    #output {
+      font-size: 6vw;
+      font-weight: bold;
     }
 
     .intro {
@@ -40,170 +46,68 @@
       margin-bottom: 30px;
     }
 
-    #output {
-      margin-top: 20px;
-      font-size: 6vw;
-      font-weight: bold;
-      word-wrap: break-word;
-      color: white;
-    }
-
-    #updated {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      font-size: 12px;
-      color: gray;
-    }
-
     @media (min-width: 768px) {
-      h1 {
-        font-size: 32px;
+      h1, #output, .intro {
+        font-size: 28px;
       }
-      .intro, #output {
-        font-size: 20px;
-      }
-    }
-
-    /* Make entire screen clickable */
-    #clickArea {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-    }
-
-    /* Optional visual indicator */
-    #clickHint {
-      font-size: 4vw;
-      color: #aaa;
-      margin-top: 40px;
     }
   </style>
 </head>
 <body>
 
-  <div id="clickArea" onclick="generateIdea()"></div>
-
-  <div class="container">
-    <p id="updated">Updated: 07.08.2025, 03:20</p>
-    <p class="intro">Next time you're in a business meeting with investors and want to impress, here are some big ideas.</p>
-    <h1>Start up idea generator</h1>
-    <div id="output">Tap anywhere to begin</div>
-    <p id="clickHint">(Tap anywhere)</p>
+  <div id="clickArea" onclick="generateIdea()">
+    <div class="intro">Tap anywhere to generate a big business idea.</div>
+    <h1>Startup Idea Generator</h1>
+    <div id="output">Your idea will appear here.</div>
   </div>
 
   <script>
-    const thingsRaw = `
-Google maps
-Dropbox 
-Google Drive
-Pokemon cards
-Netflix
-HBO Max
-Instagram
-shoes
-ear buds
-a bread
-a park
-a festival
-a big data analysis tool
-an escape room
-a history book
-a car
-a laundry service
-a boat
-a bicycle
-a hair gel
-a speedometer
-an inspirational book
-a dating app
-an mp3 player
-a drivers license
-an airline
-a YouTube channel 
-a manifest
-a drink
-a bed
-a TV-screen
-a Google search app
-a coffee cup
-a coffee shop
-a start up
-a cell phone plan
-a mobile app
-a mobile phone
-a search engine
-a bluetooth device
-a spreadsheet
-a Facebook group
-a radio station
-`;
+    const things = [
+      "Google Maps", "Dropbox", "Google Drive", "Pokemon cards", "Netflix",
+      "HBO Max", "Instagram", "shoes", "earbuds", "bread", "a park", "a festival",
+      "a big data analysis tool", "an escape room", "a history book", "a car",
+      "a laundry service", "a boat", "a bicycle", "hair gel", "a speedometer",
+      "an inspirational book", "a dating app", "an mp3 player", "a driver’s license",
+      "an airline", "a YouTube channel", "a manifest", "a drink", "a bed", "a TV screen",
+      "a Google search app", "a coffee cup", "a coffee shop", "a startup", "a cell phone plan",
+      "a mobile app", "a mobile phone", "a search engine", "a Bluetooth device",
+      "a spreadsheet", "a Facebook group", "a radio station"
+    ];
 
-    const groupsRaw = `
-children
-statisticians
-data analysts
-ghosts
-gold fish 
-rabbits
-tulips 
-rappers
-undercover agents
-Christians
-criminals
-students
-teachers
-baristas
-psychiatrists
-foodora couriers
-supermarket cashiers
-architects
-Hindus
-asians
-immigrants
-doctors
-handymen
-politicians
-bus drivers
-cab drivers
-pilots
-`;
+    const groups = [
+      "children", "statisticians", "data analysts", "ghosts", "goldfish", "rabbits",
+      "tulips", "rappers", "undercover agents", "Christians", "criminals", "students",
+      "teachers", "baristas", "psychiatrists", "Foodora couriers", "cashiers", "architects",
+      "Hindus", "Asians", "immigrants", "doctors", "handymen", "politicians", "bus drivers",
+      "cab drivers", "pilots"
+    ];
 
-    const things = thingsRaw.trim().split('\n');
-    const groups = groupsRaw.trim().split('\n');
-
-    function getRandomItem(list) {
-      return list[Math.floor(Math.random() * list.length)];
+    function getRandomItem(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
     }
 
     function generateIdea() {
-      const thing = getRandomItem(things);
-      const group = getRandomItem(groups);
-      const phrase = `It's ${thing} for ${group}`;
-      document.getElementById("output").textContent = phrase;
-      speakText(phrase);
+      const idea = `It's ${getRandomItem(things)} for ${getRandomItem(groups)}.`;
+      document.getElementById('output').textContent = idea;
+      speakIdea(idea);
     }
 
-    function speakText(text) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
+    function speakIdea(text) {
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = 'en-US';
 
-      // Prefer Siri or Alexa-like voice if available
-      const voices = speechSynthesis.getVoices();
-      const preferredVoice = voices.find(voice =>
-        voice.name.includes("Samantha") ||  // Siri-like on iOS
-        voice.name.includes("Alexa") ||     // Some browsers might have this
-        voice.name.includes("Google US English")
+      // Optional: try to pick a natural-sounding voice
+      const voices = window.speechSynthesis.getVoices();
+      const preferred = voices.find(v =>
+        v.name.includes("Samantha") || v.name.includes("Alexa") || v.name.includes("Google US English")
       );
-      if (preferredVoice) {
-        utterance.voice = preferredVoice;
-      }
+      if (preferred) msg.voice = preferred;
 
-      speechSynthesis.cancel(); // Stop previous speech
-      speechSynthesis.speak(utterance);
+      speechSynthesis.cancel();
+      speechSynthesis.speak(msg);
     }
 
-    // Load voices early (for some browsers)
+    // Fix voice list not being ready immediately
     window.speechSynthesis.onvoiceschanged = () => {};
   </script>
 
